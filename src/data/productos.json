@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "albumName": "p3nt4gr4m",
+    "artistName": "Sonic Fock",
+    "price": 250.00,
+    "releaseDate": "2025-10-01",
+    "type": "cd",
+    "category": "Shoegaze / Post-Punk",
+    "seller": "Sonic Fock Records",
+    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.Zc56-pdCim_rw48ZYicPuAHaHT?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "El EP de 5 canciones, puro poder y texturas de muro de sonido."
+  },
+  {
+    "id": "2",
+    "albumName": "starfock? psychedelic black hole",
+    "artistName": "Sonic Fock",
+    "price": 450.00,
+    "releaseDate": "2026-03-01",
+    "type": "vinilo",
+    "category": "Psychedelic Rock",
+    "seller": "Sonic Fock Records",
+    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.Zc56-pdCim_rw48ZYicPuAHaHT?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "El nuevo EP de 6 canciones. Un viaje espacial directo al agujero negro."
+  }
+]
