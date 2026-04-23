@@ -8,7 +8,7 @@
     "type": "cd",
     "category": "Shoegaze / Post-Punk",
     "seller": "Sonic Fock Records",
-    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.Zc56-pdCim_rw48ZYicPuAHaHT?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
     "description": "El EP de 5 canciones, puro poder y texturas de muro de sonido."
   },
   {
@@ -20,7 +20,91 @@
     "type": "vinilo",
     "category": "Psychedelic Rock",
     "seller": "Sonic Fock Records",
-    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.Zc56-pdCim_rw48ZYicPuAHaHT?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
     "description": "El nuevo EP de 6 canciones. Un viaje espacial directo al agujero negro."
+  },
+  {
+    "id": "3",
+    "albumName": "Orc",
+    "artistName": "Thee Oh Sees",
+    "price": 650.00,
+    "releaseDate": "2017-08-25",
+    "type": "vinilo",
+    "category": "Garage / Psychedelic",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
+    "description": "Doble vinilo con el clásico sonido crudo, enérgico y experimental."
+  },
+  {
+    "id": "4",
+    "albumName": "Avvolgere",
+    "artistName": "True Widow",
+    "price": 550.00,
+    "releaseDate": "2016-09-23",
+    "type": "vinilo",
+    "category": "Stoner Rock",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
+    "description": "Riffs pesados y lentos. Una obra maestra del stonegaze para tu colección."
+  },
+  {
+    "id": "5",
+    "albumName": "Love of Life (Deluxe Edition)",
+    "artistName": "Swans",
+    "price": 500.00,
+    "releaseDate": "1992-02-24",
+    "type": "vinilo",
+    "category": "Post-Punk / Experimental",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b27333262886e99942553a7a0bdd",
+    "description": "Una obra intensa con atmósferas oscuras y texturas industriales."
+  },
+  {
+    "id": "6",
+    "albumName": "Once in a Long, Long While...",
+    "artistName": "Low Roar",
+    "price": 480.00,
+    "releaseDate": "2017-04-14",
+    "type": "vinilo",
+    "category": "Indie Folk / Post-Rock",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/Ross_longlongwhile.jpg",
+    "description": "Melancolía pura con paisajes sonoros envolventes y voces etéreas."
+  },
+  {
+    "id": "7",
+    "albumName": "Skin",
+    "artistName": "Flume",
+    "price": 600.00,
+    "releaseDate": "2016-05-27",
+    "type": "vinilo",
+    "category": "Electronic / Future Bass",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://m.media-amazon.com/images/I/9164V-qoO8L._UF1000,1000_QL80_.jpg",
+    "description": "Diseño sonoro innovador con sintetizadores envolventes y bajos profundos."
+  },
+  {
+    "id": "8",
+    "albumName": "Donda (Deluxe)",
+    "artistName": "Kanye West",
+    "price": 750.00,
+    "releaseDate": "2021-11-14",
+    "type": "cd",
+    "category": "Hip Hop / Rap",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://m.media-amazon.com/images/I/81M8FFwTgaL.jpg",
+    "description": "Una producción épica, reflexiva y expansiva con múltiples colaboraciones."
+  },
+  {
+    "id": "9",
+    "albumName": "The Golden Age of Knowhere",
+    "artistName": "Funeral Party",
+    "price": 350.00,
+    "releaseDate": "2011-01-24",
+    "type": "cd",
+    "category": "Dance-Punk / Indie Rock",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2733c9a14d8b1086960c5d56945",
+    "description": "Ritmos frenéticos y energía bailable con un espíritu punk."
   }
 ]
