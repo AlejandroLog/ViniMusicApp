@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker'; // <-- Importar el Picker
 import productosData from '../data/productos.json';
 
 export default function HomeScreen({ navigation }) {
     const [user, setUser] = useState(null);
-    const [filter, setFilter] = useState('todo'); // Estado del filtro
+    const [filter, setFilter] = useState('todo'); 
 
     useEffect(() => {
         const getUserData = async () => {
@@ -41,17 +40,31 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.header}>
                 <Text style={styles.welcomeText}>Catálogo VINIA</Text>
             </View>
-            <View style={styles.pickerContainer}>
+            
+            <View style={styles.filterContainer}>
                 <Text style={styles.pickerLabel}>Filtrar por:</Text>
-                <Picker
-                    selectedValue={filter}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setFilter(itemValue)}
-                >
-                    <Picker.Item label="Todos los productos" value="todo" />
-                    <Picker.Item label="Solo Vinilos" value="vinilo" />
-                    <Picker.Item label="Solo CDs" value="cd" />
-                </Picker>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
+                    <TouchableOpacity 
+                        style={[styles.chip, filter === 'todo' && styles.chipActive]} 
+                        onPress={() => setFilter('todo')}
+                    >
+                        <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>Todos</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={[styles.chip, filter === 'vinilo' && styles.chipActive]} 
+                        onPress={() => setFilter('vinilo')}
+                    >
+                        <Text style={[styles.chipText, filter === 'vinilo' && styles.chipTextActive]}>Vinilos</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={[styles.chip, filter === 'cd' && styles.chipActive]} 
+                        onPress={() => setFilter('cd')}
+                    >
+                        <Text style={[styles.chipText, filter === 'cd' && styles.chipTextActive]}>CDs</Text>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
             
             <FlatList
@@ -70,9 +83,15 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f4f4f4' },
     header: { padding: 20, backgroundColor: '#111', paddingTop: 50 },
     welcomeText: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-    pickerContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#ddd' },
-    pickerLabel: { fontSize: 16, fontWeight: 'bold' },
-    picker: { flex: 1, height: 50 },
+    /*estilos para los chingados chips*/
+    filterContainer: { paddingVertical: 15, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#ddd' },
+    pickerLabel: { fontSize: 16, fontWeight: 'bold', paddingHorizontal: 15, marginBottom: 10 },
+    chipScroll: { paddingHorizontal: 15, flexDirection: 'row' },
+    chip: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 20, backgroundColor: '#eee', marginRight: 10 },
+    chipActive: { backgroundColor: '#111' },
+    chipText: { fontSize: 14, color: '#333', fontWeight: '600' },
+    chipTextActive: { color: '#fff' },
+    
     listContainer: { padding: 10, paddingBottom: 20 },
     row: { justifyContent: 'space-between' },
     card: { backgroundColor: '#fff', width: '48%', borderRadius: 8, padding: 10, marginBottom: 15, elevation: 3 },
