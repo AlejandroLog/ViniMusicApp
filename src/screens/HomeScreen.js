@@ -48,7 +48,7 @@ export default function HomeScreen({ navigation }) {
                         style={[styles.chip, filter === 'todo' && styles.chipActive]} 
                         onPress={() => setFilter('todo')}
                     >
-                        <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>Todos</Text>
+                        <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>Descubrir</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity 

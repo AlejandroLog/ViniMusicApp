@@ -1,51 +1,51 @@
 [
   {
     "id": "1",
-    "albumName": "p3nt4gr4m",
-    "artistName": "Sonic Fock",
-    "price": 250.00,
-    "releaseDate": "2025-10-01",
-    "type": "cd",
-    "category": "Shoegaze / Post-Punk",
-    "seller": "Sonic Fock Records",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
-    "description": "El EP de 5 canciones, puro poder y texturas de muro de sonido."
+    "albumName": "Elliott Smith",
+    "artistName": "Elliott Smith",
+    "price": 650.00,
+    "releaseDate": "1995-07-21",
+    "type": "vinilo",
+    "category": "Indie Folk / Lo-Fi",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.DlhDhomPrpQoqG45lQc0jgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "El segundo álbum de estudio, homónimo y absolutamente esencial para los amantes del folk melancólico e íntimo."
   },
   {
     "id": "2",
-    "albumName": "starfock? psychedelic black hole",
-    "artistName": "Sonic Fock",
-    "price": 450.00,
-    "releaseDate": "2026-03-01",
+    "albumName": "Cavalcade",
+    "artistName": "Black Midi",
+    "price": 750.00,
+    "releaseDate": "2021-05-26",
     "type": "vinilo",
-    "category": "Psychedelic Rock",
-    "seller": "Sonic Fock Records",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
-    "description": "El nuevo EP de 6 canciones. Un viaje espacial directo al agujero negro."
+    "category": "Avant-Prog / Experimental Rock",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://i.discogs.com/2IhMCFbmJAiS0Cfj86pFBK-Q1Eu29pL8BSDv6fbHK74/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4ODY5/NDg4LTE2MjIyMjM2/MzUtOTYwOC5qcGVn.jpeg",
+    "description": "Una obra maestra moderna del rock experimental, llena de caos calculado, jazz, y un virtuosismo implacable."
   },
   {
     "id": "3",
-    "albumName": "Orc",
-    "artistName": "Thee Oh Sees",
-    "price": 650.00,
-    "releaseDate": "2017-08-25",
+    "albumName": "Either/Or",
+    "artistName": "Elliott Smith",
+    "price": 700.00,
+    "releaseDate": "1997-02-25",
     "type": "vinilo",
-    "category": "Garage / Psychedelic",
+    "category": "Indie Folk",
     "seller": "VINIA Distribución",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
-    "description": "Doble vinilo con el clásico sonido crudo, enérgico y experimental."
+    "imageUrl": "https://tse1.explicit.bing.net/th/id/OIP.6EXHUKtxferBOdc6aBce7gHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "Uno de sus discos más aclamados e icónicos, marcando la transición hacia un sonido de estudio un poco más expansivo."
   },
   {
     "id": "4",
-    "albumName": "Avvolgere",
-    "artistName": "True Widow",
-    "price": 550.00,
-    "releaseDate": "2016-09-23",
+    "albumName": "Hellfire",
+    "artistName": "Black Midi",
+    "price": 800.00,
+    "releaseDate": "2022-07-15",
     "type": "vinilo",
-    "category": "Stoner Rock",
+    "category": "Avant-Prog / Experimental Rock",
     "seller": "VINIA Distribución",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/12in-Vinyl-LP-Record-Angle.jpg/800px-12in-Vinyl-LP-Record-Angle.jpg",
-    "description": "Riffs pesados y lentos. Una obra maestra del stonegaze para tu colección."
+    "imageUrl": "https://media.pitchfork.com/photos/62791f55fd287b2bad2da2a7/master/w_1280%2Cc_limit/Black-Midi-Hellfire.jpg",
+    "description": "Velocidad, intensidad y locura teatral. Un disco épico, brutal y complejo que no da respiro al oyente."
   },
   {
     "id": "5",
@@ -68,7 +68,7 @@
     "type": "vinilo",
     "category": "Indie Folk / Post-Rock",
     "seller": "VINIA Distribución",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/Ross_longlongwhile.jpg",
+    "imageUrl": "https://tse3.mm.bing.net/th/id/OIP.SylpVh1LfWhwhTKoMCLHCAHaGs?rs=1&pid=ImgDetMain&o=7&rm=3",
     "description": "Melancolía pura con paisajes sonoros envolventes y voces etéreas."
   },
   {
@@ -106,5 +106,103 @@
     "seller": "VINIA Distribución",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2733c9a14d8b1086960c5d56945",
     "description": "Ritmos frenéticos y energía bailable con un espíritu punk."
+  }
+,
+  
+  {
+    "id": "10",
+    "albumName": "La Vida de Alguien Más",
+    "artistName": "Diles que no me maten",
+    "price": 600.00,
+    "releaseDate": "2021-11-26",
+    "type": "vinilo",
+    "category": "Post-Punk / Experimental",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://tse4.mm.bing.net/th/id/OIP.46LepPay6v10fJ8EP-GzgwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "Poesía urbana y atmósferas oscuras que consolidan a esta banda como pieza clave de la escena underground mexicana."
+  },
+  {
+    "id": "11",
+    "albumName": "Long Season",
+    "artistName": "Fishmans",
+    "price": 950.00,
+    "releaseDate": "1996-10-25",
+    "type": "vinilo",
+    "category": "Dream Pop / Neo-Psychedelia",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://i.ebayimg.com/images/g/z7IAAeSwC-JotYUb/s-l400.jpg",
+    "description": "Una composición continua de más de 35 minutos. Un viaje inmersivo, soñador, melancólico y absolutamente legendario."
+  },
+  {
+    "id": "12",
+    "albumName": "Goo",
+    "artistName": "Sonic Youth",
+    "price": 280.00,
+    "releaseDate": "1990-06-26",
+    "type": "cd",
+    "category": "Alternative Rock / Noise Rock",
+    "seller": "Sonic Fock Records",
+    "imageUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhcphE2Db6EdS2PypqdvWiLDckenvKfflT8CfWAqpIYeqh5fzQr82e4fybiWViqb6M9mS8Q1_IhdP6ofE5yoqclDHaNRBObY5JIf-d6wU2RqGOAq0RwDQutdy6HGodu-pBpLJFHHjh8XWrFNVcPT3kJD7HZ8Vyt-_hbxg8HkGeC8JHdcyWKA2eUcHAyctwt/s1277/Sonic%20Youth%20Goo%20album.jpg",
+    "description": "Un pilar del rock alternativo de los 90. Incluye clásicos como 'Kool Thing' y una de las portadas más icónicas del género."
+  },
+  {
+    "id": "13",
+    "albumName": "Fuzzybrain",
+    "artistName": "Dayglow",
+    "price": 220.00,
+    "releaseDate": "2018-09-28",
+    "type": "cd",
+    "category": "Indie Pop / Bedroom Pop",
+    "seller": "Sonic Fock Records",
+    "imageUrl": "https://th.bing.com/th/id/R.fdcf067ccd8c381de05bfdfb2a4976c2?rik=rqltk5ah1%2fQqhQ&pid=ImgRaw&r=0",
+    "description": "El álbum debut que definió el sonido optimista y pegajoso de Sloan Struble. Ideal para vibras alegres y veraniegas."
+  },
+  {
+    "id": "14",
+    "albumName": "Schlagenheim",
+    "artistName": "black midi",
+    "price": 300.00,
+    "releaseDate": "2019-06-21",
+    "type": "cd",
+    "category": "Math Rock / Post-Punk",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://media.pitchfork.com/photos/5cda083085a35de3f7e63e23/master/pass/blackmidi_schlagenheim_album%20cover.jpeg",
+    "description": "El explosivo debut de la banda británica. Un disco frenético, técnico y lleno de energía impredecible."
+  },
+  {
+    "id": "15",
+    "albumName": "Turn On The Bright Lights",
+    "artistName": "Interpol",
+    "price": 250.00,
+    "releaseDate": "2002-08-20",
+    "type": "cd",
+    "category": "Post-Punk Revival",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://tse2.mm.bing.net/th/id/OIP.JfTJm3PVCj7n-zkHeA_4iQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "description": "Una pieza fundamental de la escena de Nueva York de los 2000. Oscuro, elegante y lleno de himnos melancólicos."
+  },
+  {
+    "id": "16",
+    "albumName": "Weezer (Blue Album)",
+    "artistName": "Weezer",
+    "price": 240.00,
+    "releaseDate": "1994-05-10",
+    "type": "cd",
+    "category": "Power Pop / Alt Rock",
+    "seller": "Sonic Fock Records",
+    "imageUrl": "https://preview.redd.it/99vbmfc9sh661.png?width=600&format=png&auto=webp&s=0f23ee3385ec4f3f13debfa87e5f8849c084c728",
+    "description": "El álbum que lo empezó todo para Rivers Cuomo y compañía. Contiene 'Buddy Holly', 'Say It Ain't So' y puro poder pop."
+  },
+  {
+    "id": "17",
+    "albumName": "Carrion Crawler/The Dream",
+    "artistName": "Thee Oh Sees",
+    "price": 320.00,
+    "releaseDate": "2011-11-16",
+    "type": "cd",
+    "category": "Garage Rock / Psych Rock",
+    "seller": "VINIA Distribución",
+    "imageUrl": "https://media.brooklynvegan.com/xxrzsfjkyw/uploads/2020/12/22/Carion-Crawler-The-Dream1.jpg",
+    "description": "Un asalto sonoro de garage rock psicodélico. Energía pura, guitarras distorsionadas y ritmos motorik incesantes."
   }
 ]

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, Alert, Keyboard } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
 
@@ -10,8 +10,33 @@ export default function RadiotecaScreen({ navigation }) {
 
     const { addToCart } = useContext(GlobalContext);
 
-    // el puto token
     const DISCOGS_TOKEN = 'NBcYWdXFSqQHxXgKLPCDVGitzYuPfWgioScWTpDE';
+
+    useEffect(() => {
+        const loadInitialAlbums = async () => {
+            const genres = ['shoegaze', 'stoner rock', 'post-punk', 'grunge', 'psychedelic rock'];
+            const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+            
+            setIsLoading(true);
+            try {
+                const url = `https://api.discogs.com/database/search?q=${encodeURIComponent(randomGenre)}&type=release&format=vinyl&token=${DISCOGS_TOKEN}&per_page=15`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Error de conexión");
+                
+                const data = await response.json();
+                if (data.results) {
+                    setResults(data.results);
+                }
+            } catch (err) {
+                setError("Hubo un problema cargando las recomendaciones.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadInitialAlbums();
+    }, []);
 
     const searchDiscogs = async () => {
         if (!query.trim()) return;
@@ -58,7 +83,7 @@ export default function RadiotecaScreen({ navigation }) {
         Alert.alert("¡Añadido a la colección!", `Se agregó "${productToCart.albumName}" a tu carrito.`);
     };
 
-const renderItem = ({ item }) => (
+    const renderItem = ({ item }) => (
         <TouchableOpacity 
             style={styles.card}
             onPress={() => navigation.navigate('RadiotecaDetail', { apiItem: item })}
@@ -71,7 +96,6 @@ const renderItem = ({ item }) => (
                 <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
                 <Text style={styles.year}>Año: {item.year || 'Desconocido'}</Text>
                 <Text style={styles.country}>País: {item.country || 'N/A'}</Text>
-                
 
                 <TouchableOpacity 
                     style={styles.addBtn} 
@@ -87,7 +111,7 @@ const renderItem = ({ item }) => (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Radioteca Global</Text>
-                <Text style={styles.headerSub}>Busca cualquier vinilo en la base de datos mundial</Text>
+                <Text style={styles.headerSub}>Descubre y busca cualquier disco</Text>
             </View>
 
             <View style={styles.searchContainer}>
