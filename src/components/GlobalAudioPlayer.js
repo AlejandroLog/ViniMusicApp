@@ -12,12 +12,12 @@ const tracks = [
 export default function GlobalAudioPlayer() {
     const [sound, setSound] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(-1);
+    const [currentIndex, setCurrentIndex] = useState(0); 
 
     const playTrack = async (index) => {
         try {
             if (sound) {
-                await sound.unloadAsync();
+                await sound.unloadAsync(); 
             }
             const { sound: newSound } = await Audio.Sound.createAsync(tracks[index]);
             setSound(newSound);
@@ -45,7 +45,7 @@ export default function GlobalAudioPlayer() {
                 setIsPlaying(true);
             }
         } else {
-            playTrack(Math.floor(Math.random() * tracks.length));
+            playTrack(0);
         }
     };
 
@@ -77,6 +77,7 @@ export default function GlobalAudioPlayer() {
                     <Ionicons name={isPlaying ? "pause" : "play"} size={22} color="#fff" />
                 </TouchableOpacity>
                 
+                {/* Botón para Siguiente Canción */}
                 <TouchableOpacity onPress={handleNextTrack} style={styles.btn}>
                     <Ionicons name="play-skip-forward" size={22} color="#fff" />
                 </TouchableOpacity>
@@ -95,8 +96,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderTopWidth: 1,
         borderTopColor: '#333',
-        elevation: 5,
-        shadowColor: '#000',
+        elevation: 5, 
+        shadowColor: '#000', 
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.2,
         shadowRadius: 3,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     liveBadge: {
-        backgroundColor: '#e63946', // Rojo
+        backgroundColor: '#e63946', 
         paddingHorizontal: 6,
         paddingVertical: 3,
         borderRadius: 4,

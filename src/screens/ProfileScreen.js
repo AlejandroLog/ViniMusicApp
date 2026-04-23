@@ -1,9 +1,29 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function ProfileScreen({ navigation }) {
-    const { user, orders, deleteOrder, updateOrder } = useContext(GlobalContext);
+    const { user, setUser, orders, deleteOrder, updateOrder } = useContext(GlobalContext);
+
+    const handleLogout = () => {
+        Alert.alert(
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas salir de tu cuenta?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                { 
+                    text: "Sí, salir", 
+                    style: "destructive", 
+                    onPress: async () => {
+                        await AsyncStorage.removeItem('currentUser'); 
+                        if (setUser) setUser(null); 
+                        navigation.replace('Login'); 
+                    }
+                }
+            ]
+        );
+    };
 
     const handleDeleteOrder = (item) => {
         if (item.status !== 'Cancelado') {
@@ -34,7 +54,6 @@ export default function ProfileScreen({ navigation }) {
         return (
             <View style={styles.orderCard}>
                 <View style={styles.orderHeader}>
-                    <Text style={styles.orderId}>ID: {item.id.slice(-6)}</Text>
                     <Text style={styles.orderDate}>{item.date}</Text>
                 </View>
                 <Text style={[styles.orderStatus, { color: isCancelado ? 'red' : '#666' }]}>
@@ -71,6 +90,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
         );
     };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -78,9 +98,16 @@ export default function ProfileScreen({ navigation }) {
                     <Text style={styles.avatarText}>{user?.name?.charAt(0).toUpperCase()}</Text>
                 </View>
                 <Text style={styles.name}>{user?.name}</Text>
-                <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
-                    <Text style={styles.editBtnText}>Editar Perfil</Text>
-                </TouchableOpacity>
+                
+                <View style={styles.headerButtons}>
+                    <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
+                        <Text style={styles.editBtnText}>Editar Perfil</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+                        <Text style={styles.logoutBtnText}>Cerrar Sesión</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
             <Text style={styles.sectionTitle}>Historial de Pedidos</Text>
@@ -100,8 +127,13 @@ const styles = StyleSheet.create({
     avatar: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center' },
     avatarText: { color: '#fff', fontSize: 24, fontWeight: 'bold' },
     name: { fontSize: 20, fontWeight: 'bold', marginTop: 10 },
-    editBtn: { marginTop: 10, padding: 8, backgroundColor: '#eee', borderRadius: 5 },
-    editBtnText: { fontSize: 14, fontWeight: 'bold' },
+    
+    headerButtons: { flexDirection: 'row', marginTop: 15, gap: 10 },
+    editBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#eee', borderRadius: 5 },
+    editBtnText: { fontSize: 14, fontWeight: 'bold', color: '#111' },
+    logoutBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#fff', borderWidth: 1, borderColor: 'red', borderRadius: 5 },
+    logoutBtnText: { fontSize: 14, fontWeight: 'bold', color: 'red' },
+    
     sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 15 },
     orderCard: { backgroundColor: '#f9f9f9', padding: 15, borderRadius: 10, marginBottom: 15, borderWidth: 1, borderColor: '#eee' },
     orderHeader: { flexDirection: 'row', justifyContent: 'space-between' },
