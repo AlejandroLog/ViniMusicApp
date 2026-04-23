@@ -10,6 +10,7 @@ import ProductDetailScreen from '../screens/ProductDetailScreen';
 import RadiotecaScreen from '../screens/RadiotecaScreen';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import RadiotecaDetailScreen from '../screens/RadiotecaDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,6 +35,7 @@ export default function AppNavigator() {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Editar Perfil' }} />
       <Stack.Screen name="Home" component={MainTabs} options={{ headerShown: false }} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Detalles del Disco' }} />
+      <Stack.Screen name="RadiotecaDetail" component={RadiotecaDetailScreen} options={{ title: 'Detalles de la Edición' }} />
     </Stack.Navigator>
   );
 }
