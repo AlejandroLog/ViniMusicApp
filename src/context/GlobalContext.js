@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import productosData from '../data/productos.json';
 
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+    const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const [orders, setOrders] = useState([]);
     const [user, setUser] = useState(null);
@@ -13,9 +15,16 @@ export const GlobalProvider = ({ children }) => {
             const savedCart = await AsyncStorage.getItem('cart');
             const savedOrders = await AsyncStorage.getItem('orders');
             const savedUser = await AsyncStorage.getItem('currentUser');
+            const savedProducts = await AsyncStorage.getItem('products');
             if (savedCart) setCart(JSON.parse(savedCart));
             if (savedOrders) setOrders(JSON.parse(savedOrders));
             if (savedUser) setUser(JSON.parse(savedUser));
+            if (savedProducts) {
+                setProducts(JSON.parse(savedProducts));
+            } else {
+                setProducts(productosData);
+                await AsyncStorage.setItem('products', JSON.stringify(productosData));
+            }
         };
         loadData();
     }, []);
@@ -96,9 +105,15 @@ export const GlobalProvider = ({ children }) => {
         setOrders(newOrders);
         await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
     };
+    const addProduct = async (nuevoProducto) => {
+        const updatedProducts = [nuevoProducto, ...products];
+        setProducts(updatedProducts);
+        await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
+    };
 
     return (
         <GlobalContext.Provider value={{
+            products, addProduct,
             cart, orders, user, setUser,
             addToCart, updateQuantity, removeFromCart, clearCart,
             updateUser, deleteUser,
