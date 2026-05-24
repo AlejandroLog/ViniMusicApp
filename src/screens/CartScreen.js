@@ -16,18 +16,13 @@ export default function CartScreen({ navigation }) {
         NetInfo.fetch().then(state => {
             if (!state.isConnected) {
                 Alert.alert("Error de Conexión", "No puedes realizar la compra sin internet. Por favor verifica tu red.");
-                return;
-            }
-
+                return;}
             if (cart.length === 0) {
                 Alert.alert("Carrito Vacío", "Agrega algunos discos antes de finalizar el pedido.");
-                return;
-            }
-
+                return;}
             Alert.alert(
                 "Confirmar Pedido",
-                `¿Deseas finalizar tu compra por $${total.toFixed(2)}?`,
-                [
+                `¿Deseas finalizar tu compra por $${total.toFixed(2)}?`,[
                     { text: "Cancelar", style: "cancel" },
                     { text: "Confirmar", onPress: () => {
                         createOrder(total);

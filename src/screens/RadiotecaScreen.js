@@ -165,3 +165,4 @@ const styles = StyleSheet.create({
     addBtn: { marginTop: 10, backgroundColor: '#e63946', paddingVertical: 8, borderRadius: 5, alignItems: 'center' },
     addBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 13 }
 });
+

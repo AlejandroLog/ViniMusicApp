@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     avatar: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center' },
     avatarText: { color: '#fff', fontSize: 24, fontWeight: 'bold' },
     name: { fontSize: 20, fontWeight: 'bold', marginTop: 10 },
-    
     headerButtons: { flexDirection: 'row', marginTop: 15, gap: 10 },
     editBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#eee', borderRadius: 5 },
     editBtnText: { fontSize: 14, fontWeight: 'bold', color: '#111' },

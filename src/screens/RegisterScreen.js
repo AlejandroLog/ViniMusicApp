@@ -23,28 +23,21 @@ export default function RegisterScreen({ navigation }) {
     const handleRegister = async () => {
         if (!name || !email || !password) {
             Alert.alert("Error", "Todos los campos son obligatorios");
-            return;
-        }
-
+            return;}
         try {
             const existingUsers = await AsyncStorage.getItem('users');
             const users = existingUsers ? JSON.parse(existingUsers) : [];
-
             if (users.find(u => u.email === email)) {
                 Alert.alert("Error", "Este correo ya está registrado");
-                return;
-            }
-
+                return;}
             const newUser = { name, email, password };
             users.push(newUser);
             await AsyncStorage.setItem('users', JSON.stringify(users));
             
             Alert.alert("Éxito", "Usuario registrado correctamente");
-            navigation.goBack(); 
-            
+            navigation.goBack();   
         } catch (error) {
-            Alert.alert("Error", "No se pudo registrar el usuario");
-        }
+            Alert.alert("Error", "No se pudo registrar el usuario");}
     };
 
     return (
@@ -69,7 +62,6 @@ export default function RegisterScreen({ navigation }) {
                 <View style={styles.formContainer}>
                     <Text style={styles.title}>Crear Cuenta</Text>
                     <Text style={styles.subtitle}>Únete para conseguir tus formatos físicos favoritos</Text>
-
                     <View style={styles.inputGroup}>
                         <TextInput 
                             style={styles.input} 
@@ -129,20 +121,20 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: { 
         flex: 1, 
-        backgroundColor: '#FFFFFF', // Modo Claro activado
+        backgroundColor: '#FFFFFF', 
     },
     scrollContainer: {
         flexGrow: 1,
-        justifyContent: 'flex-start', // Esto asegura que todo suba
-        paddingTop: Platform.OS === 'ios' ? 50 : 30, // Empuja ligeramente hacia abajo desde la barra de estado
+        justifyContent: 'flex-start',
+        paddingTop: Platform.OS === 'ios' ? 50 : 30,
         paddingBottom: 30,
     },
     animationContainer: {
         alignItems: 'center',
-        marginBottom: 10, // Reduce el espacio entre la animación y el título
+        marginBottom: 10, 
     },
     lottieSize: {
-        width: 140, // Ligeramente más pequeña para ahorrar espacio vertical
+        width: 140, 
         height: 140,
     },
     formContainer: {
@@ -151,22 +143,22 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#111111', // Texto oscuro para buen contraste
+        color: '#111111', 
         marginBottom: 5,
     },
     subtitle: {
         fontSize: 14,
-        color: '#666666', // Gris oscuro para subtítulos
+        color: '#666666',
         marginBottom: 25,
     },
     inputGroup: {
         marginBottom: 15,
     },
     input: { 
-        backgroundColor: '#F7F7F7', // Fondo gris muy tenue para los inputs
+        backgroundColor: '#F7F7F7', 
         color: '#333333',
         borderWidth: 1, 
-        borderColor: '#E0E0E0', // Borde sutil
+        borderColor: '#E0E0E0', 
         padding: 15, 
         borderRadius: 10, 
         fontSize: 16,
@@ -190,7 +182,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     registerButton: {
-        backgroundColor: '#111111', // Botón principal oscuro para contrastar con el fondo blanco
+        backgroundColor: '#111111', 
         paddingVertical: 15,
         borderRadius: 10,
         alignItems: 'center',
@@ -201,7 +193,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     registerButtonText: {
-        color: '#FFFFFF', // Texto blanco sobre botón oscuro
+        color: '#FFFFFF', 
         fontSize: 16,
         fontWeight: 'bold',
     },

@@ -3,8 +3,6 @@ import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs'; 
 import { Ionicons } from '@expo/vector-icons';
-
-// Importación de todas las pantallas
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -30,7 +28,6 @@ function MainTabs() {
         tabBarStyle: { backgroundColor: '#fff', borderTopColor: '#eee' },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
           if (route.name === 'Tienda') {
             iconName = focused ? 'albums' : 'albums-outline';
           } else if (route.name === 'Radioteca') {

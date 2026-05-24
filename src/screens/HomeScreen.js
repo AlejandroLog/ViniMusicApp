@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f4f4f4' },
     header: { padding: 20, backgroundColor: '#111', paddingTop: 50 },
     welcomeText: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-    /*estilos para los chingados chips*/
     filterContainer: { paddingVertical: 15, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#ddd' },
     pickerLabel: { fontSize: 16, fontWeight: 'bold', paddingHorizontal: 15, marginBottom: 10 },
     chipScroll: { paddingHorizontal: 15, flexDirection: 'row' },

@@ -5,10 +5,7 @@ import { GlobalContext } from '../context/GlobalContext';
 export default function ProductDetailScreen({ route, navigation }) {
     const { producto } = route.params;
     const [cantidad, setCantidad] = useState(1);
-    
-    // Traemos la función de nuestro Contexto Global
     const { addToCart } = useContext(GlobalContext);
-
     const handleAddToCart = () => {
         addToCart(producto, cantidad);
         Alert.alert("Éxito", `${cantidad}x ${producto.albumName} añadido al carrito.`);

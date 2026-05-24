@@ -59,3 +59,4 @@ const styles = StyleSheet.create({
     deleteBtn: { padding: 15, alignItems: 'center' },
     deleteText: { color: 'red', fontWeight: 'bold' }
 });
+

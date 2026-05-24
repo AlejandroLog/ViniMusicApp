@@ -24,27 +24,19 @@ export default function LoginScreen({ navigation }) {
     const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert("Error", "Ingresa correo y contraseña");
-            return;
-        }
-
+            return;}
         try {
             const existingUsers = await AsyncStorage.getItem('users');
             const users = existingUsers ? JSON.parse(existingUsers) : [];
-
             const user = users.find(u => u.email === email && u.password === password);
-
             if (user) {
                 await AsyncStorage.setItem('currentUser', JSON.stringify(user));
-                
                 setUser(user); 
-                
                 navigation.replace('Home'); 
             } else {
-                Alert.alert("Error", "Credenciales incorrectas");
-            }
+                Alert.alert("Error", "Credenciales incorrectas");}
         } catch (error) {
-            Alert.alert("Error", "Hubo un problema al iniciar sesión");
-        }
+            Alert.alert("Error", "Hubo un problema al iniciar sesión");}
     };
 
     return (
