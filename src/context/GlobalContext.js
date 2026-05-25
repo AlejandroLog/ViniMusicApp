@@ -1,123 +1,189 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import productosData from '../data/productos.json';
+import axios from 'axios';
+
+// Configuración directa con la IP de tu computadora para Expo en dispositivo físico
+const API_URL = 'http://192.168.1.75:3000/api';
 
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const [orders, setOrders] = useState([]);
-    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
+    // --- CARGA INICIAL ---
     useEffect(() => {
-        const loadData = async () => {
-            const savedCart = await AsyncStorage.getItem('cart');
-            const savedOrders = await AsyncStorage.getItem('orders');
-            const savedUser = await AsyncStorage.getItem('currentUser');
-            const savedProducts = await AsyncStorage.getItem('products');
-            if (savedCart) setCart(JSON.parse(savedCart));
-            if (savedOrders) setOrders(JSON.parse(savedOrders));
-            if (savedUser) setUser(JSON.parse(savedUser));
-            if (savedProducts) {
-                setProducts(JSON.parse(savedProducts));
-            } else {
-                setProducts(productosData);
-                await AsyncStorage.setItem('products', JSON.stringify(productosData));
+        const loadInitialData = async () => {
+            try {
+                const storedUser = await AsyncStorage.getItem('@user_session');
+                if (storedUser) setUser(JSON.parse(storedUser));
+                await fetchProducts(); 
+            } catch (error) {
+                console.error('Error cargando datos iniciales:', error);
+            } finally {
+                setLoading(false);
             }
         };
-        loadData();
+        loadInitialData();
     }, []);
 
-    const addToCart = async (producto, cantidad) => {
-        let newCart = [...cart];
-        const exist = newCart.find(item => item.id === producto.id);
-        
-        if (exist) {
-            exist.cantidad += cantidad;
-        } else {
-            newCart.push({ ...producto, cantidad });
+    // ==========================================
+    // MÓDULO DE USUARIOS (Auth y Perfil)
+    // ==========================================
+    const login = async (email, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/users/login`, { email, password });
+            const userData = response.data;
+            setUser(userData);
+            await AsyncStorage.setItem('@user_session', JSON.stringify(userData));
+            return userData;
+        } catch (error) {
+            throw error.response?.data?.message || 'Error de conexión en el login';
         }
-        
-        setCart(newCart);
-        await AsyncStorage.setItem('cart', JSON.stringify(newCart));
     };
 
-    const updateQuantity = async (id, nuevaCantidad) => {
-        if (nuevaCantidad < 1) return;
-        const newCart = cart.map(item => item.id === id ? { ...item, cantidad: nuevaCantidad } : item);
-        setCart(newCart);
-        await AsyncStorage.setItem('cart', JSON.stringify(newCart));
+    const register = async (name, email, password) => {
+        try {
+            const response = await axios.post(`${API_URL}/users/register`, { name, email, password });
+            const userData = response.data;
+            setUser(userData);
+            await AsyncStorage.setItem('@user_session', JSON.stringify(userData));
+            return userData;
+        } catch (error) {
+            throw error.response?.data?.message || 'Error de conexión en el registro';
+        }
     };
 
-    const removeFromCart = async (id) => {
-        const newCart = cart.filter(item => item.id !== id);
-        setCart(newCart);
-        await AsyncStorage.setItem('cart', JSON.stringify(newCart));
-    };
-
-    const clearCart = async () => {
-        setCart([]);
-        await AsyncStorage.removeItem('cart');
-    };
-
-
-    const updateUser = async (updatedData) => {
-        const newUser = { ...user, ...updatedData };
-        setUser(newUser);
-        await AsyncStorage.setItem('currentUser', JSON.stringify(newUser));
-        
-        const allUsers = JSON.parse(await AsyncStorage.getItem('users') || '[]');
-        const updatedUsers = allUsers.map(u => u.email === user.email ? newUser : u);
-        await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-    };
-
-    const deleteUser = async () => {
-        const allUsers = JSON.parse(await AsyncStorage.getItem('users') || '[]');
-        const updatedUsers = allUsers.filter(u => u.email !== user.email);
-        await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-        await AsyncStorage.removeItem('currentUser');
+    const logout = async () => {
         setUser(null);
+        setOrders([]);
+        await AsyncStorage.removeItem('@user_session');
     };
 
-    const createOrder = async (total) => {
-        const newOrder = {
-            id: Date.now().toString(),
-            date: new Date().toLocaleDateString(),
-            items: [...cart],
-            total: total,
-            status: 'Pendiente'
-        };
-        const newOrders = [newOrder, ...orders];
-        setOrders(newOrders);
-        await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
-        await clearCart();
+    const updateUser = async (userId, data) => {
+        try {
+            const response = await axios.put(`${API_URL}/users/${userId}`, data);
+            const updatedUser = { ...user, ...data };
+            setUser(updatedUser);
+            await AsyncStorage.setItem('@user_session', JSON.stringify(updatedUser));
+        } catch (error) {
+            throw error.response?.data?.message || 'Error actualizando perfil';
+        }
     };
 
-    const deleteOrder = async (id) => {
-        const newOrders = orders.filter(o => o.id !== id);
-        setOrders(newOrders);
-        await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
+    const deleteUser = async (userId) => {
+        try {
+            await axios.delete(`${API_URL}/users/${userId}`);
+            await logout();
+        } catch (error) {
+            throw error.response?.data?.message || 'Error eliminando cuenta';
+        }
     };
 
-    const updateOrder = async (id, newStatus) => {
-        const newOrders = orders.map(o => o.id === id ? { ...o, status: newStatus } : o);
-        setOrders(newOrders);
-        await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
+    // ==========================================
+    // MÓDULO DE PRODUCTOS
+    // ==========================================
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/products`);
+            setProducts(response.data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
     };
-    const addProduct = async (nuevoProducto) => {
-        const updatedProducts = [nuevoProducto, ...products];
-        setProducts(updatedProducts);
-        await AsyncStorage.setItem('products', JSON.stringify(updatedProducts));
+
+    const addProduct = async (productData) => {
+        try {
+            const response = await axios.post(`${API_URL}/products`, productData);
+            setProducts([...products, response.data]); 
+            return response.data;
+        } catch (error) {
+            throw error.response?.data?.message || 'Error agregando producto';
+        }
+    };
+
+    // ==========================================
+    // MÓDULO DE CARRITO (Estado Local)
+    // ==========================================
+    const addToCart = (product) => {
+        const existing = cart.find(item => item._id === product._id);
+        if (existing) {
+            setCart(cart.map(item => item._id === product._id ? { ...item, cantidad: item.cantidad + 1 } : item));
+        } else {
+            setCart([...cart, { ...product, cantidad: 1 }]);
+        }
+    };
+
+    const updateQuantity = (id, newQuantity) => {
+        if (newQuantity < 1) return;
+        setCart(cart.map(item => item._id === id ? { ...item, cantidad: newQuantity } : item));
+    };
+
+    const removeFromCart = (id) => {
+        setCart(cart.filter(item => item._id !== id));
+    };
+
+    const clearCart = () => setCart([]);
+
+    // ==========================================
+    // MÓDULO DE PEDIDOS
+    // ==========================================
+    const createOrder = async () => {
+        if (!user) throw new Error('Debes iniciar sesión para comprar');
+        try {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.cantidad), 0);
+            const orderData = {
+                userId: user._id,
+                items: cart,
+                total: total,
+                status: 'Pendiente',
+                date: new Date().toISOString()
+            };
+            await axios.post(`${API_URL}/orders`, orderData);
+            clearCart();
+            await fetchUserOrders(user._id);
+        } catch (error) {
+            throw error.response?.data?.message || 'Error creando el pedido';
+        }
+    };
+
+    const fetchUserOrders = async (userId) => {
+        try {
+            const response = await axios.get(`${API_URL}/orders/user/${userId}`);
+            setOrders(response.data);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    };
+
+    const cancelOrder = async (orderId) => {
+        try {
+            await axios.patch(`${API_URL}/orders/${orderId}/status`, { status: 'Cancelado' });
+            await fetchUserOrders(user._id); 
+        } catch (error) {
+            throw error.response?.data?.message || 'Error al cancelar';
+        }
+    };
+
+    const deleteOrder = async (orderId) => {
+        try {
+            await axios.delete(`${API_URL}/orders/${orderId}`);
+            await fetchUserOrders(user._id); 
+        } catch (error) {
+            throw error.response?.data?.message || 'Error al eliminar pedido';
+        }
     };
 
     return (
         <GlobalContext.Provider value={{
-            products, addProduct,
-            cart, orders, user, setUser,
+            user, products, cart, orders, loading,
+            login, register, logout, updateUser, deleteUser,
+            fetchProducts, addProduct,
             addToCart, updateQuantity, removeFromCart, clearCart,
-            updateUser, deleteUser,
-            createOrder, deleteOrder, updateOrder
+            createOrder, fetchUserOrders, cancelOrder, deleteOrder
         }}>
             {children}
         </GlobalContext.Provider>

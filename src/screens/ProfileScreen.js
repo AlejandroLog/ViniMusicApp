@@ -1,10 +1,20 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { useFocusEffect } from '@react-navigation/native';
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function ProfileScreen({ navigation }) {
-    const { user, setUser, orders, deleteOrder, updateOrder } = useContext(GlobalContext);
+    // Asegúrate de tener estas funciones mapeadas en tu GlobalContext hacia axios
+    const { user, logout, orders, fetchUserOrders, cancelOrder, deleteOrder } = useContext(GlobalContext);
+
+    // Recargar el historial cuando el perfil se muestre en pantalla
+    useFocusEffect(
+        React.useCallback(() => {
+            if (user && user._id) {
+                fetchUserOrders(user._id);
+            }
+        }, [user])
+    );
 
     const handleLogout = () => {
         Alert.alert(
@@ -16,8 +26,7 @@ export default function ProfileScreen({ navigation }) {
                     text: "Sí, salir", 
                     style: "destructive", 
                     onPress: async () => {
-                        await AsyncStorage.removeItem('currentUser'); 
-                        if (setUser) setUser(null); 
+                        await logout();
                         navigation.replace('Login'); 
                     }
                 }
@@ -25,24 +34,37 @@ export default function ProfileScreen({ navigation }) {
         );
     };
 
+    const handleCancelOrder = async (orderId) => {
+        try {
+            await cancelOrder(orderId);
+            Alert.alert("Actualizado", "El pedido ha sido cancelado.");
+        } catch (error) {
+            Alert.alert("Error", error.toString());
+        }
+    };
+
     const handleDeleteOrder = (item) => {
         if (item.status !== 'Cancelado') {
-            Alert.alert(
-                "Acción no permitida", 
-                "Debes cancelar el pedido antes de poder eliminarlo de tu historial."
-            );
+            Alert.alert("Acción no permitida", "Debes cancelar el pedido antes de eliminarlo del historial.");
             return;
         }
 
         Alert.alert(
             "Eliminar Pedido",
-            "¿Estás seguro de que quieres borrar este pedido del historial?",
+            "¿Estás seguro de que quieres borrar este pedido permanentemente?",
             [
                 { text: "No", style: "cancel" },
                 { 
                     text: "Sí, borrar", 
                     style: "destructive", 
-                    onPress: () => deleteOrder(item.id) 
+                    onPress: async () => {
+                        try {
+                            await deleteOrder(item._id);
+                            Alert.alert("Eliminado", "El pedido desapareció de tu historial.");
+                        } catch (error) {
+                            Alert.alert("Error", error.toString());
+                        }
+                    } 
                 }
             ]
         );
@@ -54,7 +76,8 @@ export default function ProfileScreen({ navigation }) {
         return (
             <View style={styles.orderCard}>
                 <View style={styles.orderHeader}>
-                    <Text style={styles.orderDate}>{item.date}</Text>
+                    {/* Convertir la fecha de MongoDB a formato legible */}
+                    <Text style={styles.orderDate}>{new Date(item.date).toLocaleDateString()}</Text>
                 </View>
                 <Text style={[styles.orderStatus, { color: isCancelado ? 'red' : '#666' }]}>
                     Estado: {item.status || 'Pendiente'}
@@ -62,29 +85,18 @@ export default function ProfileScreen({ navigation }) {
                 <Text style={styles.orderTotal}>Total: ${item.total.toFixed(2)}</Text>
                 
                 <View style={styles.orderActions}>
-                    <TouchableOpacity 
-                        onPress={() => navigation.navigate('OrderDetail', { order: item })}
-                        style={[styles.actionBtn, { backgroundColor: '#111', borderColor: '#111' }]}
-                    >
+                    <TouchableOpacity onPress={() => navigation.navigate('OrderDetail', { order: item })} style={[styles.actionBtn, { backgroundColor: '#111', borderColor: '#111' }]}>
                         <Text style={[styles.actionText, { color: '#fff' }]}>Ver Detalles</Text>
                     </TouchableOpacity>
 
                     {!isCancelado && (
-                        <TouchableOpacity 
-                            onPress={() => updateOrder(item.id, 'Cancelado')}
-                            style={styles.actionBtn}
-                        >
+                        <TouchableOpacity onPress={() => handleCancelOrder(item._id)} style={styles.actionBtn}>
                             <Text style={styles.actionText}>Cancelar</Text>
                         </TouchableOpacity>
                     )}
 
-                    <TouchableOpacity 
-                        onPress={() => handleDeleteOrder(item)}
-                        style={[styles.actionBtn, { borderColor: isCancelado ? 'red' : '#ccc' }]}
-                    >
-                        <Text style={[styles.actionText, { color: isCancelado ? 'red' : '#ccc' }]}>
-                            Borrar
-                        </Text>
+                    <TouchableOpacity onPress={() => handleDeleteOrder(item)} style={[styles.actionBtn, { borderColor: isCancelado ? 'red' : '#ccc' }]}>
+                        <Text style={[styles.actionText, { color: isCancelado ? 'red' : '#ccc' }]}>Borrar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -113,7 +125,7 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.sectionTitle}>Historial de Pedidos</Text>
             <FlatList
                 data={orders}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 renderItem={renderOrder}
                 ListEmptyComponent={<Text style={styles.empty}>No hay pedidos registrados.</Text>}
             />
@@ -132,11 +144,9 @@ const styles = StyleSheet.create({
     editBtnText: { fontSize: 14, fontWeight: 'bold', color: '#111' },
     logoutBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#fff', borderWidth: 1, borderColor: 'red', borderRadius: 5 },
     logoutBtnText: { fontSize: 14, fontWeight: 'bold', color: 'red' },
-    
     sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 15 },
     orderCard: { backgroundColor: '#f9f9f9', padding: 15, borderRadius: 10, marginBottom: 15, borderWidth: 1, borderColor: '#eee' },
     orderHeader: { flexDirection: 'row', justifyContent: 'space-between' },
-    orderId: { fontWeight: 'bold' },
     orderDate: { fontSize: 12, color: '#666' },
     orderStatus: { color: '#666', marginTop: 5, fontWeight: 'bold' },
     orderTotal: { fontSize: 16, fontWeight: 'bold', color: '#e63946', marginTop: 5 },

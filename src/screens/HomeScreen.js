@@ -1,25 +1,17 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function HomeScreen({ navigation }) {
-    const [user, setUser] = useState(null);
     const [filter, setFilter] = useState('todo'); 
     
-    const { products } = useContext(GlobalContext);
-
-    useEffect(() => {
-        const getUserData = async () => {
-            const userData = await AsyncStorage.getItem('currentUser');
-            if (userData) setUser(JSON.parse(userData));
-        };
-        getUserData();
-    }, []);
+    // Obtenemos los productos cargados desde MongoDB
+    const { products, loading } = useContext(GlobalContext);
 
     const filteredProducts = products.filter(item => {
         if (filter === 'todo') return true;
-        return item.type.toLowerCase() === filter.toLowerCase();
+        // Agrega validación por si el type viene indefinido desde la BD
+        return item.type && item.type.toLowerCase() === filter.toLowerCase();
     });
 
     const renderProduct = ({ item }) => (
@@ -29,10 +21,18 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.artistName}>{item.artistName}</Text>
             <Text style={styles.price}>${item.price.toFixed(2)}</Text>
             <View style={styles.badge}>
-                <Text style={styles.badgeText}>{item.type.toUpperCase()}</Text>
+                <Text style={styles.badgeText}>{item.type ? item.type.toUpperCase() : 'N/A'}</Text>
             </View>
         </TouchableOpacity>
     );
+
+    if (loading) {
+        return (
+            <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+                <ActivityIndicator size="large" color="#111" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -46,18 +46,23 @@ export default function HomeScreen({ navigation }) {
                     <TouchableOpacity style={[styles.chip, filter === 'todo' && styles.chipActive]} onPress={() => setFilter('todo')}>
                         <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>Descubrir</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity style={[styles.chip, filter === 'vinilo' && styles.chipActive]} onPress={() => setFilter('vinilo')}>
                         <Text style={[styles.chipText, filter === 'vinilo' && styles.chipTextActive]}>Vinilos</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity style={[styles.chip, filter === 'cd' && styles.chipActive]} onPress={() => setFilter('cd')}>
                         <Text style={[styles.chipText, filter === 'cd' && styles.chipTextActive]}>CDs</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </View>
             
-            <FlatList data={filteredProducts} keyExtractor={(item) => item.id} renderItem={renderProduct} numColumns={2} contentContainerStyle={styles.listContainer} columnWrapperStyle={styles.row} />
+            <FlatList 
+                data={filteredProducts} 
+                keyExtractor={(item) => item._id} 
+                renderItem={renderProduct} 
+                numColumns={2} 
+                contentContainerStyle={styles.listContainer} 
+                columnWrapperStyle={styles.row} 
+            />
         </View>
     );
 }

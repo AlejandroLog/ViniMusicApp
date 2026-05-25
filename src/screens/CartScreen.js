@@ -15,18 +15,27 @@ export default function CartScreen({ navigation }) {
     const handleCheckout = () => {
         NetInfo.fetch().then(state => {
             if (!state.isConnected) {
-                Alert.alert("Error de Conexión", "No puedes realizar la compra sin internet. Por favor verifica tu red.");
-                return;}
+                Alert.alert("Error de Conexión", "No puedes realizar la compra sin internet.");
+                return;
+            }
             if (cart.length === 0) {
                 Alert.alert("Carrito Vacío", "Agrega algunos discos antes de finalizar el pedido.");
-                return;}
+                return;
+            }
             Alert.alert(
                 "Confirmar Pedido",
-                `¿Deseas finalizar tu compra por $${total.toFixed(2)}?`,[
+                `¿Deseas finalizar tu compra por $${total.toFixed(2)}?`,
+                [
                     { text: "Cancelar", style: "cancel" },
-                    { text: "Confirmar", onPress: () => {
-                        createOrder(total);
-                        Alert.alert("¡Éxito!", "Tu pedido ha sido generado y el carrito se ha vaciado.");
+                    { text: "Confirmar", onPress: async () => {
+                        try {
+                            await createOrder(); // Ya calcula el total desde el Context
+                            Alert.alert("¡Éxito!", "Tu pedido ha sido generado y guardado en la base de datos.");
+                            // Redirigir al historial para verlo
+                            navigation.navigate('Profile'); 
+                        } catch (error) {
+                            Alert.alert("Error en el Pedido", error.toString());
+                        }
                     }}
                 ]
             );
@@ -41,16 +50,16 @@ export default function CartScreen({ navigation }) {
                 <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
                 
                 <View style={styles.qtyContainer}>
-                    <TouchableOpacity onPress={() => updateQuantity(item.id, item.cantidad - 1)} style={styles.qtyBtn}>
+                    <TouchableOpacity onPress={() => updateQuantity(item._id, item.cantidad - 1)} style={styles.qtyBtn}>
                         <Text>-</Text>
                     </TouchableOpacity>
                     <Text style={styles.qtyText}>{item.cantidad}</Text>
-                    <TouchableOpacity onPress={() => updateQuantity(item.id, item.cantidad + 1)} style={styles.qtyBtn}>
+                    <TouchableOpacity onPress={() => updateQuantity(item._id, item.cantidad + 1)} style={styles.qtyBtn}>
                         <Text>+</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <TouchableOpacity onPress={() => removeFromCart(item.id)} style={styles.removeBtn}>
+            <TouchableOpacity onPress={() => removeFromCart(item._id)} style={styles.removeBtn}>
                 <Text style={styles.removeText}>Eliminar</Text>
             </TouchableOpacity>
         </View>
@@ -61,7 +70,7 @@ export default function CartScreen({ navigation }) {
             <Text style={styles.title}>Tu Carrito</Text>
             <FlatList
                 data={cart}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 renderItem={renderItem}
                 ListEmptyComponent={<Text style={styles.empty}>El carrito está vacío</Text>}
             />

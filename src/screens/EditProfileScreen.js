@@ -3,29 +3,39 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function EditProfileScreen({ navigation }) {
-    const { user, updateUser, deleteUser } = useContext(GlobalContext);
+    // Asegúrate de que estas funciones llamen a axios.put(`/api/users/${user._id}`) y axios.delete(...)
+    const { user, updateUser, deleteUser, logout } = useContext(GlobalContext);
     const [name, setName] = useState(user?.name || '');
     const [email, setEmail] = useState(user?.email || '');
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!name || !email) {
             Alert.alert("Error", "Campos obligatorios");
             return;
         }
-        updateUser({ name, email });
-        Alert.alert("Éxito", "Perfil actualizado");
-        navigation.goBack();
+        try {
+            await updateUser(user._id, { name, email });
+            Alert.alert("Éxito", "Perfil actualizado en la base de datos");
+            navigation.goBack();
+        } catch (error) {
+            Alert.alert("Error", error.toString());
+        }
     };
 
     const handleDeleteAccount = () => {
         Alert.alert(
             "Eliminar Cuenta",
-            "¿Estás seguro? Esta acción no se puede deshacer.",
+            "¿Estás seguro? Se borrará tu cuenta de la base de datos permanentemente.",
             [
                 { text: "Cancelar", style: "cancel" },
                 { text: "Eliminar", style: "destructive", onPress: async () => {
-                    await deleteUser();
-                    navigation.replace('Login');
+                    try {
+                        await deleteUser(user._id);
+                        await logout();
+                        navigation.replace('Login');
+                    } catch (error) {
+                        Alert.alert("Error", error.toString());
+                    }
                 }}
             ]
         );
@@ -37,7 +47,7 @@ export default function EditProfileScreen({ navigation }) {
             <TextInput style={styles.input} value={name} onChangeText={setName} />
             
             <Text style={styles.label}>Correo Electrónico</Text>
-            <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" />
+            <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
             <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
                 <Text style={styles.btnText}>Guardar Cambios</Text>
@@ -59,4 +69,3 @@ const styles = StyleSheet.create({
     deleteBtn: { padding: 15, alignItems: 'center' },
     deleteText: { color: 'red', fontWeight: 'bold' }
 });
-

@@ -23,8 +23,10 @@ export default function OrderDetailScreen({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.orderId}>Detalles del Pedido: #{order.id.slice(-6)}</Text>
-                <Text style={styles.orderDate}>Fecha de compra: {order.date}</Text>
+                {/* Aquí estaba el error: cambiamos order.id por order._id y agregamos validación con ? */}
+                <Text style={styles.orderId}>Detalles del Pedido: #{order?._id?.slice(-6) || 'N/A'}</Text>
+                {/* Opcional: Formatear la fecha por si viene cruda de Mongo */}
+                <Text style={styles.orderDate}>Fecha de compra: {new Date(order.date).toLocaleDateString()}</Text>
                 <Text style={[styles.orderStatus, { color: order.status === 'Cancelado' ? 'red' : '#28a745' }]}>
                     Estado: {order.status}
                 </Text>
@@ -34,7 +36,8 @@ export default function OrderDetailScreen({ route }) {
             
             <FlatList
                 data={order.items}
-                keyExtractor={(item) => item.id}
+                // También cambiamos el id por _id aquí para que la lista funcione bien
+                keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
                 renderItem={renderItem}
                 contentContainerStyle={styles.list}
                 showsVerticalScrollIndicator={false}
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
     productArtist: { fontSize: 13, color: '#666' },
     productPrice: { fontSize: 14, color: '#e63946', marginTop: 5, fontWeight: '500' },
     productTotal: { fontSize: 16, fontWeight: 'bold', color: '#111', marginLeft: 10 },
-footer: { 
+    footer: { 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
@@ -73,6 +76,7 @@ footer: {
         backgroundColor: '#fff', 
         borderTopWidth: 1, 
         borderTopColor: '#ddd' 
-    },    totalLabel: { fontSize: 18, fontWeight: 'bold', color: '#333' },
+    },    
+    totalLabel: { fontSize: 18, fontWeight: 'bold', color: '#333' },
     totalAmount: { fontSize: 24, fontWeight: 'bold', color: '#e63946' }
 });

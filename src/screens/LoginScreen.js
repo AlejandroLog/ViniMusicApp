@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
 import { View, TextInput, Text, StyleSheet, Alert, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
 import { GlobalContext } from '../context/GlobalContext';
 
@@ -10,7 +9,7 @@ export default function LoginScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
     const animationRef = useRef(null);
 
-    const { setUser } = useContext(GlobalContext); 
+    const { login } = useContext(GlobalContext); 
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -18,32 +17,17 @@ export default function LoginScreen({ navigation }) {
             return;
         }
 
-        if (email === 'admin@vinia.com' && password === 'admin123') {
-            const adminUser = { name: 'Admin VINIA', email, role: 'admin' };
-            await AsyncStorage.setItem('currentUser', JSON.stringify(adminUser));
-            setUser(adminUser);
-            navigation.replace('Home');
-            return;
-        }
-
         try {
-            const existingUsers = await AsyncStorage.getItem('users');
-            const users = existingUsers ? JSON.parse(existingUsers) : [];
-
-            const found = users.find(u => u.email === email && u.password === password);
-
-            if (found) {
-                const standardUser = { ...found, role: 'user' };
-                await AsyncStorage.setItem('currentUser', JSON.stringify(standardUser));
-                
-                setUser(standardUser); 
-                
-                navigation.replace('Home'); 
+            const userData = await login(email, password);
+            // El backend ya nos debe devolver el rol. Validamos a dónde mandarlo:
+            if (userData.role === 'admin') {
+                // Si tienes una pantalla específica de admin, navega ahí. Si no, a Home.
+                navigation.replace('Home');
             } else {
-                Alert.alert("Error", "Credenciales incorrectas");
+                navigation.replace('Home'); 
             }
         } catch (error) {
-            Alert.alert("Error", "Hubo un problema al iniciar sesión");
+            Alert.alert("Error de Autenticación", error.toString());
         }
     };
 

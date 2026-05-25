@@ -3,44 +3,38 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView 
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function AdminAddProductScreen({ navigation }) {
-    const { addProduct } = useContext(GlobalContext);
+    const { addProduct } = useContext(GlobalContext); // Esta debe llamar a axios.post('/api/products')
     
-    // Estados originales
     const [albumName, setAlbumName] = useState('');
     const [artistName, setArtistName] = useState('');
     const [price, setPrice] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    
-    // Nuevos estados para completar la información
     const [releaseDate, setReleaseDate] = useState('');
     const [seller, setSeller] = useState('');
     const [description, setDescription] = useState('');
 
     const handleSave = async () => {
-        // Ahora validamos que todos los campos estén llenos
         if (!albumName || !artistName || !price || !imageUrl || !releaseDate || !seller || !description) {
             Alert.alert("Error", "Todos los campos son obligatorios.");
             return;
         }
 
         const newProduct = {
-            id: Date.now().toString(),
             albumName,
             artistName,
             price: parseFloat(price),
             imageUrl,
-            releaseDate, // Se agrega fecha
-            seller,      // Se agrega vendedor
-            description, // Se agrega descripción
+            releaseDate, 
+            seller,      
+            description, 
             type: 'vinilo', 
             category: 'General'
         };
 
-        if (addProduct) {
+        try {
             await addProduct(newProduct);
-            Alert.alert("¡Éxito!", "El disco se ha agregado al catálogo.");
+            Alert.alert("¡Éxito!", "El disco se ha guardado en la base de datos.");
             
-            // Limpiamos el formulario completo
             setAlbumName('');
             setArtistName('');
             setPrice('');
@@ -50,8 +44,8 @@ export default function AdminAddProductScreen({ navigation }) {
             setDescription('');
             
             navigation.navigate('Tienda');
-        } else {
-            Alert.alert("Aviso", "Falta actualizar el GlobalContext para guardar el disco.");
+        } catch (error) {
+            Alert.alert("Error al guardar", error.toString());
         }
     };
 
@@ -74,7 +68,6 @@ export default function AdminAddProductScreen({ navigation }) {
                 <TextInput style={styles.input} value={price} onChangeText={setPrice} keyboardType="numeric" placeholder="Ej. 650.00" />
             </View>
 
-            {/* NUEVOS CAMPOS */}
             <View style={styles.inputGroup}>
                 <Text style={styles.label}>Fecha de Lanzamiento</Text>
                 <TextInput style={styles.input} value={releaseDate} onChangeText={setReleaseDate} placeholder="Ej. 2021-11-14" />
@@ -97,7 +90,7 @@ export default function AdminAddProductScreen({ navigation }) {
                     value={description} 
                     onChangeText={setDescription} 
                     placeholder="Escribe una breve reseña del álbum..." 
-                    multiline={true} // Permite saltos de línea
+                    multiline={true} 
                     numberOfLines={4}
                 />
             </View>
@@ -117,7 +110,7 @@ const styles = StyleSheet.create({
     inputGroup: { marginBottom: 15 },
     label: { fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 5 },
     input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#ddd', padding: 15, borderRadius: 8, fontSize: 16 },
-    textArea: { height: 100, textAlignVertical: 'top' }, // Hace que el texto empiece arriba y no centrado
+    textArea: { height: 100, textAlignVertical: 'top' }, 
     saveBtn: { backgroundColor: '#e63946', padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 10, marginBottom: 20 },
     saveBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
 });
