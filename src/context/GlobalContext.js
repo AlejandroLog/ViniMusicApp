@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 // Configuración directa con la IP de tu computadora para Expo en dispositivo físico
-const API_URL = 'http://192.168.1.75:3000/api';
+const API_URL = 'http://10.86.77.25:3000/api';
+
 
 export const GlobalContext = createContext();
 

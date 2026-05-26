@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Platform, StatusBar } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { GlobalContext } from '../context/GlobalContext';
 
@@ -18,12 +18,12 @@ export default function ProfileScreen({ navigation }) {
 
     const handleLogout = () => {
         Alert.alert(
-            "Cerrar Sesión",
+            "CERRAR SESIÓN",
             "¿Estás seguro de que deseas salir de tu cuenta?",
             [
-                { text: "Cancelar", style: "cancel" },
+                { text: "CANCELAR", style: "cancel" },
                 { 
-                    text: "Sí, salir", 
+                    text: "SÍ, SALIR", 
                     style: "destructive", 
                     onPress: async () => {
                         await logout();
@@ -37,32 +37,32 @@ export default function ProfileScreen({ navigation }) {
     const handleCancelOrder = async (orderId) => {
         try {
             await cancelOrder(orderId);
-            Alert.alert("Actualizado", "El pedido ha sido cancelado.");
+            Alert.alert("ACTUALIZADO", "El pedido ha sido cancelado.");
         } catch (error) {
-            Alert.alert("Error", error.toString());
+            Alert.alert("ERROR", error.toString());
         }
     };
 
     const handleDeleteOrder = (item) => {
         if (item.status !== 'Cancelado') {
-            Alert.alert("Acción no permitida", "Debes cancelar el pedido antes de eliminarlo del historial.");
+            Alert.alert("ACCIÓN DENEGADA", "Debes cancelar el pedido antes de eliminarlo del historial.");
             return;
         }
 
         Alert.alert(
-            "Eliminar Pedido",
+            "ELIMINAR PEDIDO",
             "¿Estás seguro de que quieres borrar este pedido permanentemente?",
             [
-                { text: "No", style: "cancel" },
+                { text: "NO", style: "cancel" },
                 { 
-                    text: "Sí, borrar", 
+                    text: "SÍ, BORRAR", 
                     style: "destructive", 
                     onPress: async () => {
                         try {
                             await deleteOrder(item._id);
-                            Alert.alert("Eliminado", "El pedido desapareció de tu historial.");
+                            Alert.alert("ELIMINADO", "El pedido desapareció de tu historial.");
                         } catch (error) {
-                            Alert.alert("Error", error.toString());
+                            Alert.alert("ERROR", error.toString());
                         }
                     } 
                 }
@@ -76,27 +76,37 @@ export default function ProfileScreen({ navigation }) {
         return (
             <View style={styles.orderCard}>
                 <View style={styles.orderHeader}>
-                    {/* Convertir la fecha de MongoDB a formato legible */}
-                    <Text style={styles.orderDate}>{new Date(item.date).toLocaleDateString()}</Text>
+                    <Text style={styles.orderDate}>FECHA: {new Date(item.date).toLocaleDateString()}</Text>
+                    <Text style={[styles.orderStatus, { color: isCancelado ? '#FF784A' : '#000000' }]}>
+                        {item.status ? item.status.toUpperCase() : 'PENDIENTE'}
+                    </Text>
                 </View>
-                <Text style={[styles.orderStatus, { color: isCancelado ? 'red' : '#666' }]}>
-                    Estado: {item.status || 'Pendiente'}
-                </Text>
-                <Text style={styles.orderTotal}>Total: ${item.total.toFixed(2)}</Text>
+                
+                <Text style={styles.orderTotal}>TOTAL: ${item.total.toFixed(2)}</Text>
                 
                 <View style={styles.orderActions}>
-                    <TouchableOpacity onPress={() => navigation.navigate('OrderDetail', { order: item })} style={[styles.actionBtn, { backgroundColor: '#111', borderColor: '#111' }]}>
-                        <Text style={[styles.actionText, { color: '#fff' }]}>Ver Detalles</Text>
+                    <TouchableOpacity 
+                        onPress={() => navigation.navigate('OrderDetail', { order: item })} 
+                        style={[styles.actionBtn, styles.actionBtnDark]}
+                    >
+                        <Text style={styles.actionTextLight}>DETALLES</Text>
                     </TouchableOpacity>
 
                     {!isCancelado && (
                         <TouchableOpacity onPress={() => handleCancelOrder(item._id)} style={styles.actionBtn}>
-                            <Text style={styles.actionText}>Cancelar</Text>
+                            <Text style={styles.actionTextDark}>CANCELAR</Text>
                         </TouchableOpacity>
                     )}
 
-                    <TouchableOpacity onPress={() => handleDeleteOrder(item)} style={[styles.actionBtn, { borderColor: isCancelado ? 'red' : '#ccc' }]}>
-                        <Text style={[styles.actionText, { color: isCancelado ? 'red' : '#ccc' }]}>Borrar</Text>
+                    <TouchableOpacity 
+                        onPress={() => handleDeleteOrder(item)} 
+                        style={[
+                            styles.actionBtn, 
+                            { borderColor: isCancelado ? '#FF784A' : '#000000', opacity: isCancelado ? 1 : 0.5 }
+                        ]}
+                        disabled={!isCancelado}
+                    >
+                        <Text style={[styles.actionTextDark, { color: isCancelado ? '#FF784A' : '#000000' }]}>BORRAR</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -105,53 +115,237 @@ export default function ProfileScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#000000" />
+            
             <View style={styles.header}>
-                <View style={styles.avatar}>
-                    <Text style={styles.avatarText}>{user?.name?.charAt(0).toUpperCase()}</Text>
+                <View style={styles.profileSection}>
+                    <View style={styles.avatar}>
+                        <Text style={styles.avatarText}>{user?.name?.charAt(0).toUpperCase() || '?'}</Text>
+                    </View>
+                    <View style={styles.userInfo}>
+                        <Text style={styles.name}>{user?.name || 'USUARIO'}</Text>
+                        <Text style={styles.roleLabel}>MIEMBRO VINIA</Text>
+                    </View>
                 </View>
-                <Text style={styles.name}>{user?.name}</Text>
                 
                 <View style={styles.headerButtons}>
                     <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
-                        <Text style={styles.editBtnText}>Editar Perfil</Text>
+                        <Text style={styles.editBtnText}>EDITAR PERFIL</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-                        <Text style={styles.logoutBtnText}>Cerrar Sesión</Text>
+                        <Text style={styles.logoutBtnText}>SALIR</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <Text style={styles.sectionTitle}>Historial de Pedidos</Text>
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>HISTORIAL DE PEDIDOS</Text>
+            </View>
+
             <FlatList
                 data={orders}
                 keyExtractor={(item) => item._id}
                 renderItem={renderOrder}
-                ListEmptyComponent={<Text style={styles.empty}>No hay pedidos registrados.</Text>}
+                contentContainerStyle={styles.listContainer}
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.empty}>NO HAY PEDIDOS REGISTRADOS.</Text>
+                        <Text style={styles.emptySub}>ES HORA DE ARMAR TU COLECCIÓN.</Text>
+                    </View>
+                }
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff', padding: 20 },
-    header: { alignItems: 'center', marginVertical: 20 },
-    avatar: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center' },
-    avatarText: { color: '#fff', fontSize: 24, fontWeight: 'bold' },
-    name: { fontSize: 20, fontWeight: 'bold', marginTop: 10 },
-    headerButtons: { flexDirection: 'row', marginTop: 15, gap: 10 },
-    editBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#eee', borderRadius: 5 },
-    editBtnText: { fontSize: 14, fontWeight: 'bold', color: '#111' },
-    logoutBtn: { paddingVertical: 8, paddingHorizontal: 15, backgroundColor: '#fff', borderWidth: 1, borderColor: 'red', borderRadius: 5 },
-    logoutBtnText: { fontSize: 14, fontWeight: 'bold', color: 'red' },
-    sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 15 },
-    orderCard: { backgroundColor: '#f9f9f9', padding: 15, borderRadius: 10, marginBottom: 15, borderWidth: 1, borderColor: '#eee' },
-    orderHeader: { flexDirection: 'row', justifyContent: 'space-between' },
-    orderDate: { fontSize: 12, color: '#666' },
-    orderStatus: { color: '#666', marginTop: 5, fontWeight: 'bold' },
-    orderTotal: { fontSize: 16, fontWeight: 'bold', color: '#e63946', marginTop: 5 },
-    orderActions: { flexDirection: 'row', marginTop: 15, borderTopWidth: 1, borderTopColor: '#eee', paddingTop: 10 },
-    actionBtn: { marginRight: 15, paddingVertical: 6, paddingHorizontal: 12, borderWidth: 1, borderRadius: 4, borderColor: '#ccc' },
-    actionText: { fontSize: 12, fontWeight: 'bold' },
-    empty: { textAlign: 'center', color: '#999', marginTop: 20 }
+    container: { 
+        flex: 1, 
+        backgroundColor: '#FFFBE0' 
+    },
+    header: { 
+        backgroundColor: '#000000', 
+        paddingTop: Platform.OS === 'ios' ? 60 : 40,
+        paddingBottom: 20,
+        paddingHorizontal: 20,
+        borderBottomWidth: 4,
+        borderBottomColor: '#FF784A' // Línea naranja vibrante
+    },
+    profileSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20
+    },
+    avatar: { 
+        width: 70, 
+        height: 70, 
+        backgroundColor: '#000000', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#8CFF66', // Borde neón
+        borderRadius: 0, // Cuadrado crudo
+        shadowColor: '#8CFF66',
+        shadowOffset: { width: 3, height: 3 },
+        shadowOpacity: 1,
+        shadowRadius: 0
+    },
+    avatarText: { 
+        color: '#8CFF66', 
+        fontSize: 32, 
+        fontWeight: '900' 
+    },
+    userInfo: {
+        marginLeft: 15,
+        flex: 1
+    },
+    name: { 
+        fontSize: 24, 
+        fontWeight: '900', 
+        color: '#FFFFFF',
+        textTransform: 'uppercase',
+        letterSpacing: 1
+    },
+    roleLabel: {
+        color: '#A3A095',
+        fontSize: 12,
+        fontWeight: 'bold',
+        letterSpacing: 2,
+        marginTop: 4
+    },
+    headerButtons: { 
+        flexDirection: 'row', 
+        gap: 10 
+    },
+    editBtn: { 
+        flex: 1,
+        paddingVertical: 12, 
+        backgroundColor: '#8CFF66', // Verde Neón
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#8CFF66'
+    },
+    editBtnText: { 
+        fontSize: 14, 
+        fontWeight: '900', 
+        color: '#000000',
+        letterSpacing: 1 
+    },
+    logoutBtn: { 
+        paddingVertical: 12, 
+        paddingHorizontal: 20, 
+        backgroundColor: '#FFFFFF', 
+        borderWidth: 2, 
+        borderColor: '#000000', 
+        alignItems: 'center'
+    },
+    logoutBtnText: { 
+        fontSize: 14, 
+        fontWeight: '900', 
+        color: '#FF784A', // Naranja vibrante
+        letterSpacing: 1 
+    },
+    sectionHeader: {
+        paddingHorizontal: 20,
+        paddingTop: 25,
+        paddingBottom: 10,
+        borderBottomWidth: 2,
+        borderBottomColor: '#000000',
+        backgroundColor: '#FFFBE0'
+    },
+    sectionTitle: { 
+        fontSize: 20, 
+        fontWeight: '900', 
+        color: '#000000',
+        letterSpacing: 1
+    },
+    listContainer: {
+        padding: 20,
+        paddingBottom: 40
+    },
+    orderCard: { 
+        backgroundColor: '#FFFFFF', 
+        padding: 15, 
+        marginBottom: 20, 
+        // Estilo Brutalista
+        borderWidth: 2, 
+        borderColor: '#000000',
+        borderRadius: 0,
+        shadowColor: '#000000',
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 0,
+        elevation: 5
+    },
+    orderHeader: { 
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        borderBottomWidth: 2,
+        borderBottomColor: '#000000',
+        paddingBottom: 10,
+        marginBottom: 10
+    },
+    orderDate: { 
+        fontSize: 12, 
+        color: '#000000',
+        fontWeight: '900'
+    },
+    orderStatus: { 
+        fontSize: 12,
+        fontWeight: '900',
+        letterSpacing: 1
+    },
+    orderTotal: { 
+        fontSize: 22, 
+        fontWeight: '900', 
+        color: '#000000', 
+        marginBottom: 15 
+    },
+    orderActions: { 
+        flexDirection: 'row', 
+        gap: 10 
+    },
+    actionBtn: { 
+        flex: 1,
+        paddingVertical: 10, 
+        borderWidth: 2, 
+        borderColor: '#000000',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF'
+    },
+    actionBtnDark: {
+        backgroundColor: '#000000'
+    },
+    actionTextLight: { 
+        fontSize: 12, 
+        fontWeight: '900',
+        color: '#8CFF66', // Letra verde neón en fondo negro
+        letterSpacing: 0.5
+    },
+    actionTextDark: { 
+        fontSize: 12, 
+        fontWeight: '900',
+        color: '#000000',
+        letterSpacing: 0.5
+    },
+    emptyContainer: {
+        marginTop: 40,
+        alignItems: 'center'
+    },
+    empty: { 
+        textAlign: 'center', 
+        color: '#000000',
+        fontSize: 16,
+        fontWeight: '900',
+        textTransform: 'uppercase'
+    },
+    emptySub: {
+        textAlign: 'center',
+        color: '#FF784A',
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginTop: 5
+    }
 });

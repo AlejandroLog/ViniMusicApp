@@ -1,53 +1,54 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
 
 export default function HomeScreen({ navigation }) {
     const [filter, setFilter] = useState('todo'); 
     
-    // Obtenemos los productos cargados desde MongoDB
     const { products, loading } = useContext(GlobalContext);
 
     const filteredProducts = products.filter(item => {
         if (filter === 'todo') return true;
-        // Agrega validación por si el type viene indefinido desde la BD
         return item.type && item.type.toLowerCase() === filter.toLowerCase();
     });
 
     const renderProduct = ({ item }) => (
         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ProductDetail', { producto: item })}>
             <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
-            <Text style={styles.albumName} numberOfLines={1}>{item.albumName}</Text>
-            <Text style={styles.artistName}>{item.artistName}</Text>
-            <Text style={styles.price}>${item.price.toFixed(2)}</Text>
             <View style={styles.badge}>
                 <Text style={styles.badgeText}>{item.type ? item.type.toUpperCase() : 'N/A'}</Text>
             </View>
+            <Text style={styles.albumName} numberOfLines={1}>{item.albumName}</Text>
+            <Text style={styles.artistName} numberOfLines={1}>{item.artistName}</Text>
+            <Text style={styles.price}>${item.price.toFixed(2)}</Text>
         </TouchableOpacity>
     );
 
     if (loading) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <ActivityIndicator size="large" color="#111" />
+                <StatusBar barStyle="dark-content" backgroundColor="#FFFBE0" />
+                <ActivityIndicator size="large" color="#FF784A" />
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#000000" />
+            
             <View style={styles.header}>
                 <Text style={styles.welcomeText}>Catálogo VINIA</Text>
             </View>
             
             <View style={styles.filterContainer}>
-                <Text style={styles.pickerLabel}>Filtrar por:</Text>
+                <Text style={styles.pickerLabel}>Explorar formato:</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
                     <TouchableOpacity style={[styles.chip, filter === 'todo' && styles.chipActive]} onPress={() => setFilter('todo')}>
-                        <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>Descubrir</Text>
+                        <Text style={[styles.chipText, filter === 'todo' && styles.chipTextActive]}>TODO</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.chip, filter === 'vinilo' && styles.chipActive]} onPress={() => setFilter('vinilo')}>
-                        <Text style={[styles.chipText, filter === 'vinilo' && styles.chipTextActive]}>Vinilos</Text>
+                        <Text style={[styles.chipText, filter === 'vinilo' && styles.chipTextActive]}>VINILOS</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.chip, filter === 'cd' && styles.chipActive]} onPress={() => setFilter('cd')}>
                         <Text style={[styles.chipText, filter === 'cd' && styles.chipTextActive]}>CDs</Text>
@@ -62,29 +63,134 @@ export default function HomeScreen({ navigation }) {
                 numColumns={2} 
                 contentContainerStyle={styles.listContainer} 
                 columnWrapperStyle={styles.row} 
+                showsVerticalScrollIndicator={false}
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f4f4f4' },
-    header: { padding: 20, backgroundColor: '#111', paddingTop: 50 },
-    welcomeText: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-    filterContainer: { paddingVertical: 15, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#ddd' },
-    pickerLabel: { fontSize: 16, fontWeight: 'bold', paddingHorizontal: 15, marginBottom: 10 },
-    chipScroll: { paddingHorizontal: 15, flexDirection: 'row' },
-    chip: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 20, backgroundColor: '#eee', marginRight: 10 },
-    chipActive: { backgroundColor: '#111' },
-    chipText: { fontSize: 14, color: '#333', fontWeight: '600' },
-    chipTextActive: { color: '#fff' },
-    listContainer: { padding: 10, paddingBottom: 20 },
-    row: { justifyContent: 'space-between' },
-    card: { backgroundColor: '#fff', width: '48%', borderRadius: 8, padding: 10, marginBottom: 15, elevation: 3 },
-    productImage: { width: '100%', height: 140, borderRadius: 5, marginBottom: 10 },
-    albumName: { fontSize: 16, fontWeight: 'bold', color: '#111' },
-    artistName: { fontSize: 14, color: '#666', marginBottom: 5 },
-    price: { fontSize: 16, fontWeight: 'bold', color: '#e63946' },
-    badge: { position: 'absolute', top: 10, right: 10, backgroundColor: 'rgba(0,0,0,0.7)', paddingHorizontal: 6, borderRadius: 4 },
-    badgeText: { color: '#fff', fontSize: 10, fontWeight: 'bold' }
+    container: { 
+        flex: 1, 
+        backgroundColor: '#FFFBE0'
+    },
+    header: { 
+        padding: 20, 
+        backgroundColor: '#000000', 
+        paddingTop: Platform.OS === 'ios' ? 60 : 40,
+        borderBottomWidth: 4,
+        borderBottomColor: '#FF784A',
+        alignItems: 'center'
+    },
+    welcomeText: { 
+        fontSize: 24, 
+        fontWeight: '900', 
+        color: '#8CFF66',
+        letterSpacing: 2,
+        textTransform: 'uppercase'
+    },
+    filterContainer: { 
+        paddingVertical: 15, 
+        backgroundColor: '#FFFBE0', 
+        borderBottomWidth: 2, 
+        borderBottomColor: '#000000' 
+    },
+    pickerLabel: { 
+        fontSize: 14, 
+        fontWeight: '900', 
+        paddingHorizontal: 15, 
+        marginBottom: 10,
+        color: '#000000',
+        textTransform: 'uppercase'
+    },
+    chipScroll: { 
+        paddingHorizontal: 15, 
+        flexDirection: 'row' 
+    },
+    chip: { 
+        paddingHorizontal: 18, 
+        paddingVertical: 8, 
+        backgroundColor: '#FFFFFF', 
+        borderWidth: 2,
+        borderColor: '#FF784A', 
+        marginRight: 10,
+        borderRadius: 0 
+    },
+    chipActive: { 
+        backgroundColor: '#000000', 
+        borderColor: '#000000' 
+    },
+    chipText: { 
+        fontSize: 13, 
+        color: '#000000', 
+        fontWeight: '900',
+        letterSpacing: 1
+    },
+    chipTextActive: { 
+        color: '#8CFF66' 
+    },
+    listContainer: { 
+        padding: 15, 
+        paddingBottom: 30 
+    },
+    row: { 
+        justifyContent: 'space-between' 
+    },
+    card: { 
+        backgroundColor: '#FFFFFF', 
+        width: '48%', 
+        padding: 10, 
+        marginBottom: 20, 
+        borderWidth: 2,
+        borderColor: '#000000',
+        borderRadius: 0,
+        shadowColor: '#000000', 
+        shadowOffset: { width: 4, height: 4 }, 
+        shadowOpacity: 1, 
+        shadowRadius: 0, 
+        elevation: 5 
+    },
+    productImage: { 
+        width: '100%', 
+        height: 150, 
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: '#000000',
+        backgroundColor: '#eee' 
+    },
+    albumName: { 
+        fontSize: 16, 
+        fontWeight: '900', 
+        color: '#000000',
+        textTransform: 'uppercase',
+        marginBottom: 2
+    },
+    artistName: { 
+        fontSize: 14, 
+        color: '#FF784A',
+        fontWeight: 'bold', 
+        marginBottom: 8
+    },
+    price: { 
+        fontSize: 18, 
+        fontWeight: '900', 
+        color: '#000000' 
+    },
+    badge: { 
+        position: 'absolute', 
+        top: -5, 
+        right: -5, 
+        backgroundColor: '#8CFF66',
+        paddingHorizontal: 8, 
+        paddingVertical: 4,
+        borderWidth: 2,
+        borderColor: '#000000',
+        zIndex: 1 
+    },
+    badgeText: { 
+        color: '#000000', 
+        fontSize: 11, 
+        fontWeight: '900',
+        letterSpacing: 1
+    }
 });
